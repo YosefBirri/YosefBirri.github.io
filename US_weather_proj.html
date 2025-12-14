@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapping Projected Winter Temperature in the U.S. (2071–2090)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="container hero">
+    <div class="hero-text">
+      <h1>Mapping Projected Winter Temperature in the U.S. (2071–2090)</h1>
+      <p>
+        Projects winter season temprature in the US 2071 - 2090
+      </p>
+      <nav>
+        <a href="index.html">Portfolio Home</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section id="project-details">
+  <div class="container">
+    <h2>Project Overview</h2>
+    <p>
+        This project analyzes projected winter temperature changes across the continental 
+        United States between 2071 and 2090 using downscaled climate model data. The goal 
+        was to understand regional warming patterns and identify areas potentially vulnerable 
+        to climate related impacts on ecosystems, infrastructure, and human activities.
+    </p>
+
+    <h2>Methodology</h2>
+    <ul>
+      <li>Data:Downscaled projections from global climate models (GCMs) for winter months (Dec–Feb)</li>
+      <li>Software: QGIS for spatial visualization, R for data processing, and Python for raster calculations</li>
+      <li>Analysis steps:
+        <ol>
+           <li>Imported climate projection raster datasets into QGIS</li>
+           <li>Calculated average winter temperatures for each U.S. region</li>
+           <li>Generated anomaly maps comparing projected winter temperatures to historical averages</li>
+           <li>Applied spatial interpolation to smooth results and visualize regional patterns</li>
+        </ol>
+      </li>
+      <li>Visualization: Choropleth maps highlighting areas of significant warming, with color gradients representing temperature increases</li>
+    </ul>
+
+    <h2>Key Insights</h2>
+    <ul>
+      <li>Northern regions of the U.S. are projected to experience the largest increases in winter temperatures</li>
+      <li>Mountainous areas show smaller temperature increases due to elevation effects</li>
+      <li>Urban heat islands may exacerbate warming trends in metropolitan areas, even in winter months</li>
+      <li>Regional temperature patterns highlight potential impacts on agriculture, energy demand, and human comfort</li>
+    </ul>
+
+    <h2>Maps</h2>
+    <img src="wint_proj.jpg" alt="Map of winter temprature projection">
+
+    <div class="buttons">
+      <a href="#" class="btn primary">View Interactive Map</a>
+      <a href="https://github.com/YosefBirri/project3" class="btn secondary">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p><a href="index.html">Back to Portfolio Home</a></p>
+    <p>© 2025 Yosef Birri</p>
+  </div>
+</footer>
+
+</body>
+</html>
