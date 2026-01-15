@@ -1,20 +1,23 @@
 ---
 ---
 
+<img src="profile.jpg" alt="Description" align = "right" style="border-radius: 50%; width: 100px; height: 100px;">
+
 # Yosef Birri
-(profile.jpg)
 
 ## Education
 
 **B.A. in Geography Data Science**
-  : **Sep 2024 - Present**
+   > **Sep 2024 - Present**
   University of Washington
   Seattle, WA
 
 **Associates in Computer Science**
-  : **Sep 2022 - Jul 2024**
+  > **Sep 2022 - Jul 2024**
   South Seattle College
   Seattle, WA
+
+_____________________________
 
 ## Projects
 
@@ -30,6 +33,7 @@
 - Evaluated the model performance
 - Reported accuracy metrics and implications for real world clinical prediction
 
+_____________________________
 
 ## Skills
 
@@ -39,4 +43,6 @@
 
 **Languages:** English (proficient), Amharic
 
+_____________________________
 
+| [Linkdin](https://www.linkedin.com/in/yosef-birri-4486b2183/)  |   [Github](https://github.com/YosefBirri) |
