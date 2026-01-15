@@ -2,6 +2,7 @@
 ---
 
 # Yosef Birri
+(profile.jpg)
 
 ## Education
 
