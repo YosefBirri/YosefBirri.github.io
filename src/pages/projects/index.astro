@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectEntry from '../../components/ProjectEntry.astro';
+import { CATEGORIES } from '../../content.config';
+
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const counts = Object.fromEntries(CATEGORIES.map((c) => [c, all.filter((p) => p.data.categories.includes(c)).length]));
+---
+<Base title="Projects" description="GIS, remote sensing, spatial statistics, machine learning and web mapping projects by Yosef Birri.">
+  <section class="wrap head">
+    <h1>Projects</h1>
+    <p class="muted">Spatial analysis, remote sensing, machine learning and web mapping. Filter by the kind of work you're hiring for.</p>
+  </section>
+
+  <section class="wrap">
+    <div class="filters" role="group" aria-label="Filter projects by category">
+      <button type="button" aria-pressed="true" data-filter="all">All <span class="num">{all.length}</span></button>
+      {CATEGORIES.map((c) => (
+        <button type="button" aria-pressed="false" data-filter={c}>{c} <span class="num">{counts[c]}</span></button>
+      ))}
+    </div>
+    <p class="status visually-hidden" aria-live="polite"></p>
+    <div class="list">
+      {all.map((p) => <div id={p.id} class="item"><ProjectEntry project={p} headingLevel="h2" /></div>)}
+    </div>
+  </section>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filters button');
+  const items = document.querySelectorAll<HTMLElement>('.list .item');
+  const status = document.querySelector('.status')!;
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.filter!;
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      let shown = 0;
+      items.forEach((it) => {
+        const cats = it.querySelector('article')!.dataset.categories!.split('|');
+        const show = f === 'all' || cats.includes(f);
+        it.hidden = !show;
+        if (show) shown++;
+      });
+      status.textContent = `Showing ${shown} projects`;
+    }),
+  );
+</script>
+
+<style>
+  .head { padding-block: 3rem 1.5rem; }
+  h1 { font-size: var(--s5); font-variation-settings: 'wdth' 125; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+  .filters button {
+    font: inherit;
+    font-size: var(--s-1);
+    font-weight: 540;
+    padding: 0.45em 0.9em;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .filters button span { color: var(--ink-2); margin-left: 0.25em; }
+  .filters button:hover { border-color: var(--water); }
+  .filters button[aria-pressed='true'] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .filters button[aria-pressed='true'] span { color: #b8c4ce; }
+  .list { max-width: 900px; }
+  .item { scroll-margin-top: 2rem; }
+  .item:target :global(.entry) { background: var(--water-tint); }
+</style>

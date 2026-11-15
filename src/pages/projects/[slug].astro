@@ -1,0 +1,98 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Locator from '../../components/Locator.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', (p) => p.data.status === 'published');
+  return projects.map((p) => ({ params: { slug: p.id }, props: { project: p } }));
+}
+const { project } = Astro.props;
+const d = project.data;
+const { Content, headings } = await render(project);
+const toc = headings.filter((h) => h.depth === 2);
+---
+<Base title={d.title} description={d.summary}>
+  <article>
+    <header class="wrap case-head">
+      <p class="crumb"><a href="/projects/">Projects</a></p>
+      <h1>{d.title}</h1>
+      <p class="lede">{d.summary}</p>
+      <div class="meta">
+        {d.locator !== 'none' && <Locator locator={d.locator} coords={d.coords} place={d.place} size={120} />}
+        <dl>
+          <div><dt>Context</dt><dd>{d.context}</dd></div>
+          <div><dt>Period</dt><dd>{d.period}</dd></div>
+          {d.team && <div><dt>Team</dt><dd>{d.team}</dd></div>}
+          {d.facts?.map((f) => <div><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
+        </dl>
+      </div>
+      {d.metrics && (
+        <dl class="metrics">
+          {d.metrics.map((m) => (
+            <div><dt>{m.label}</dt><dd class="num">{m.value}</dd></div>
+          ))}
+        </dl>
+      )}
+    </header>
+
+    <div class="wrap layout">
+      <nav class="toc" aria-label="Sections">
+        <ul>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
+      </nav>
+      <div class="prose">
+        <Content />
+        {d.resumeLine && (
+          <section class="resume-line" aria-labelledby="resume-h">
+            <h2 id="resume-h">In one line</h2>
+            <p>{d.resumeLine}</p>
+          </section>
+        )}
+        {d.repo && <p><a class="button" href={d.repo}>View source code</a></p>}
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .case-head { padding-block: 2.5rem 3rem; }
+  .crumb { font-size: var(--s-1); margin-bottom: 1rem; }
+  h1 { font-size: clamp(2.2rem, 5vw, var(--s5)); font-variation-settings: 'wdth' 122; letter-spacing: -0.03em; max-width: 18em; }
+  .lede { font-size: var(--s1); max-width: 40em; margin-top: 1.25rem; }
+  .meta { display: flex; gap: 2rem; align-items: flex-start; margin-top: 2rem; }
+  .meta dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.9rem 2rem; margin: 0; flex: 1; }
+  .meta dt, .metrics dt { font-size: var(--s-1); color: var(--ink-2); }
+  .meta dd { margin: 0.1rem 0 0; }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+  }
+  .metrics div { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
+  .metrics dd { margin: 0 0 0.3rem; font-size: var(--s3); font-weight: 680; font-variation-settings: 'wdth' 115; color: var(--contour); line-height: 1.05; }
+
+  .layout { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 3rem; }
+  .toc { position: sticky; top: 1.5rem; align-self: start; }
+  .toc ul { list-style: none; padding: 0; margin: 0; border-left: 2px solid var(--rule); }
+  .toc a { display: block; padding: 0.3rem 0 0.3rem 0.9rem; color: var(--ink-2); text-decoration: none; font-size: var(--s-1); }
+  .toc a:hover { color: var(--water); }
+
+  .prose { max-width: 44rem; }
+  .prose :global(h2) { font-size: var(--s2); margin: 3rem 0 1rem; scroll-margin-top: 1.5rem; }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .prose :global(ul) { padding-left: 1.2rem; margin: 0 0 1em; }
+  .prose :global(li) { margin-bottom: 0.6em; max-width: var(--measure); }
+  .prose :global(code) { font-size: 0.88em; background: var(--paper-2); padding: 0.1em 0.35em; border-radius: 3px; }
+  .resume-line { margin-top: 3rem; padding: 1.25rem 1.5rem; background: var(--water-tint); border-radius: 6px; }
+  .resume-line h2 { font-size: var(--s1) !important; margin: 0 0 0.6rem !important; }
+  .resume-line p { margin: 0; }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .toc { position: static; }
+    .meta { flex-direction: column; }
+  }
+</style>
