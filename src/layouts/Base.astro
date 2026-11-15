@@ -1,0 +1,105 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = title === 'Yosef Birri' ? 'Yosef Birri, Geospatial Data Scientist' : `${title} | Yosef Birri`;
+const nav = [
+  { href: '/projects/', label: 'Projects' },
+  { href: '/about/', label: 'About' },
+  { href: '/resume.pdf', label: 'Resume' },
+];
+const here = Astro.url.pathname;
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Yosef Birri',
+  jobTitle: 'Geospatial Data Scientist',
+  address: { '@type': 'PostalAddress', addressLocality: 'Seattle', addressRegion: 'WA' },
+  alumniOf: 'University of Washington',
+  sameAs: ['https://github.com/YosefBirri', 'https://www.linkedin.com/in/yosef-birri-4486b2183'],
+  url: Astro.site?.toString(),
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/img/yosef-birri.jpg', Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
+  </head>
+  <body>
+    <a class="skip visually-hidden" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="mark" href="/">Yosef Birri</a>
+      <nav aria-label="Main">
+        <ul>
+          {nav.map((n) => (
+            <li><a href={n.href} aria-current={here.startsWith(n.href) ? 'page' : undefined}>{n.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-name">Yosef Birri</p>
+          <p class="muted">Geospatial data scientist in Seattle, Washington.</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="mailto:yosephkebede34@gmail.com">yosephkebede34@gmail.com</a></li>
+          <li><a href="https://www.linkedin.com/in/yosef-birri-4486b2183">LinkedIn</a></li>
+          <li><a href="https://github.com/YosefBirri">GitHub</a></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .skip:focus { position: fixed; top: 0.5rem; left: 0.5rem; width: auto; height: auto; clip: auto; padding: 0.5rem 0.8rem; background: var(--paper); z-index: 10; }
+  .site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-block: 1.4rem;
+    gap: 1rem;
+  }
+  .mark {
+    font-weight: 700;
+    font-variation-settings: 'wdth' 125;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: var(--s1);
+    letter-spacing: -0.01em;
+  }
+  nav ul { list-style: none; display: flex; gap: 1.5rem; margin: 0; padding: 0; }
+  nav a { color: var(--ink); text-decoration: none; font-weight: 500; }
+  nav a:hover { color: var(--water); }
+  nav a[aria-current='page'] { color: var(--water); box-shadow: inset 0 -2px 0 var(--water); }
+  .site-footer { border-top: 1px solid var(--rule); margin-top: 6rem; padding-block: 2.5rem 3rem; background: var(--paper-2); }
+  .footer-grid { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+  .footer-name { font-weight: 650; margin-bottom: 0.2rem; font-variation-settings: 'wdth' 118; }
+  .footer-links { list-style: none; padding: 0; margin: 0; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  @media (max-width: 560px) {
+    nav ul { gap: 1rem; }
+    .mark { font-size: var(--s0); }
+  }
+</style>

@@ -1,0 +1,219 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import OverviewMap from '../components/OverviewMap.astro';
+import ProjectEntry from '../components/ProjectEntry.astro';
+import { skillGroups } from '../lib/skills';
+
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const featured = all.filter((p) => p.data.featured);
+const ref = (id: string) => {
+  const p = all.find((x) => x.id === id)!;
+  return { title: p.data.title, href: p.data.status === 'published' ? `/projects/${id}/` : `/projects/#${id}` };
+};
+
+const sites = [
+  { name: 'Seattle', coords: [-122.33, 47.61] as [number, number], anchor: 'start' as const, dx: 16, dy: -12, projects: [ref('seattle-residential-development'), ref('seattle-sea-level-rise')] },
+  { name: 'San Francisco', coords: [-122.42, 37.77] as [number, number], anchor: 'start' as const, dx: 16, dy: 24, projects: [ref('sf-hospital-accessibility')] },
+  { name: 'Addis Ababa', coords: [38.74, 9.03] as [number, number], anchor: 'end' as const, dx: -16, dy: -12, projects: [ref('horn-of-africa-nighttime-lights'), ref('addis-riverfront-tiles')] },
+];
+const national = [ref('us-gis-labor-market'), ref('covid-county-maps')];
+
+const shownIn = (skill: string) => all.filter((p) => p.data.tools.includes(skill));
+---
+<Base title="Yosef Birri" description="Yosef Birri is a geospatial data scientist in Seattle working across GIS, remote sensing, spatial statistics, machine learning and web mapping.">
+  <section class="hero wrap">
+    <div class="hero-text">
+      <h1>
+        <span class="name">Yosef Birri</span>
+        <span class="role">Geospatial data scientist</span>
+      </h1>
+      <p class="intro">
+        I build spatial analyses, satellite-imagery workflows and machine learning models that turn location data into
+        decisions, from mapping which Seattle neighborhoods sit in the path of sea-level rise to tracking how cities in
+        the Horn of Africa have grown brighter from space.
+      </p>
+      <p class="intro muted">
+        Geography: Data Science at the University of Washington. GIS intern at Seattle Public Utilities in 2026.
+      </p>
+      <div class="actions">
+        <a class="button primary" href="#work">See selected work</a>
+        <a class="button" href="/resume.pdf">Download resume</a>
+      </div>
+      <p class="profiles">
+        <a href="https://github.com/YosefBirri">GitHub</a>
+        <a href="https://www.linkedin.com/in/yosef-birri-4486b2183">LinkedIn</a>
+      </p>
+    </div>
+    <img class="portrait" src="/img/yosef-birri.jpg" alt="Portrait of Yosef Birri" width="640" height="800" />
+  </section>
+
+  <section class="atlas wrap" aria-labelledby="atlas-h">
+    <h2 id="atlas-h" class="section-h">Where the work is</h2>
+    <OverviewMap sites={sites} national={national} />
+  </section>
+
+  <section id="work" class="work wrap" aria-labelledby="work-h">
+    <div class="section-head">
+      <h2 id="work-h" class="section-h">Selected work</h2>
+      <a href="/projects/">All {all.length} projects</a>
+    </div>
+    <div class="grid">
+      {featured.map((p) => <ProjectEntry project={p} />)}
+    </div>
+  </section>
+
+  <section class="skills wrap" aria-labelledby="skills-h">
+    <h2 id="skills-h" class="section-h">Skills, and where they show up</h2>
+    <div class="skill-groups">
+      {skillGroups.map((g) => (
+        <div class="group">
+          <h3>{g.name}</h3>
+          <ul>
+            {g.skills.map((s) => {
+              const ps = shownIn(s);
+              return (
+                <li>
+                  <span class="skill">{s}</span>
+                  <span class="where">
+                    {ps.map((p, i) => (
+                      <>{i > 0 && ', '}<a href={p.data.status === 'published' ? `/projects/${p.id}/` : `/projects/#${p.id}`}>{p.data.title}</a></>
+                    ))}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+          {g.alsoUsed && <p class="also">Also used: {g.alsoUsed}</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="experience wrap" aria-labelledby="exp-h">
+    <h2 id="exp-h" class="section-h">Experience</h2>
+    <ol class="timeline">
+      <li>
+        <p class="when num">Jul–Sep 2026</p>
+        <div>
+          <h3>Seattle Public Utilities, Enterprise Asset Management Systems</h3>
+          <p>
+            Watershed cultural resource information management intern. Wrote and ran QA test scripts for IBM Maximo,
+            compared King Tide flood-monitoring vendors for the South Park neighborhood, and built a Python dashboard
+            that maps live NOAA tide predictions and National Weather Service forecasts.
+          </p>
+        </div>
+      </li>
+      <li>
+        <p class="when num">Jun–Sep 2025</p>
+        <div>
+          <h3>GenShifter Technologies</h3>
+          <p>
+            GIS analyst intern. Mapped locations in Ethiopia, where public geographic data is scarce, from data collected
+            by field workers, and produced maps and visual reports in ArcGIS and QGIS.
+          </p>
+        </div>
+      </li>
+      <li>
+        <p class="when num">2023–present</p>
+        <div>
+          <h3>G2 Secure Staff, Seattle-Tacoma International Airport</h3>
+          <p>Wheelchair service dispatcher. Coordinates agents across terminals in real time and trained the current dispatch team.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="contact wrap" aria-labelledby="contact-h">
+    <h2 id="contact-h" class="section-h">Get in touch</h2>
+    <p>
+      I'm looking for GIS analyst, data scientist and machine learning roles. Email
+      <a href="mailto:yosephkebede34@gmail.com">yosephkebede34@gmail.com</a> or message me on
+      <a href="https://www.linkedin.com/in/yosef-birri-4486b2183">LinkedIn</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: end;
+    padding-block: clamp(2rem, 6vw, 5rem) 3.5rem;
+  }
+  h1 { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.75rem; }
+  .name {
+    font-size: clamp(3rem, 8.5vw, 6.4rem);
+    font-weight: 760;
+    font-variation-settings: 'wdth' 125;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+  }
+  .role {
+    font-size: var(--s2);
+    font-weight: 500;
+    font-variation-settings: 'wdth' 100;
+    color: var(--water);
+    letter-spacing: 0;
+  }
+  .intro { font-size: var(--s1); line-height: 1.5; max-width: 34em; }
+  .intro.muted { font-size: var(--s0); }
+  .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.75rem; }
+  .profiles { display: flex; gap: 1.4rem; margin-top: 1.25rem; }
+  .portrait {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    height: auto;
+    object-fit: cover;
+    border-radius: 6px;
+    filter: saturate(0.85);
+  }
+
+  .section-h { font-size: var(--s3); margin-bottom: 1.5rem; }
+  .atlas { padding-top: 2rem; }
+  .work { padding-top: 5rem; }
+  .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 3rem; }
+
+  .skills { padding-top: 5rem; }
+  .skill-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 3rem; }
+  .group h3 { padding-bottom: 0.6rem; border-bottom: 2px solid var(--ink); margin-bottom: 0.3rem; }
+  .group ul { list-style: none; padding: 0; margin: 0; }
+  .group li {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: 1rem;
+    padding-block: 0.55rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--s-1);
+  }
+  .skill { font-weight: 580; font-size: var(--s0); }
+  .where a { color: var(--ink-2); }
+  .where a:hover { color: var(--water); }
+  .also { font-size: var(--s-1); color: var(--ink-2); margin-top: 0.7rem; }
+
+  .experience { padding-top: 5rem; }
+  .timeline { list-style: none; padding: 0; margin: 0; }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 1.5rem;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--rule);
+  }
+  .when { margin: 0; color: var(--contour); font-weight: 600; }
+  .timeline h3 { margin-bottom: 0.4rem; }
+
+  .contact { padding-top: 5rem; }
+  .contact p { font-size: var(--s1); }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; align-items: start; }
+    .portrait { max-width: 220px; order: -1; }
+    .grid, .skill-groups { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .group li, .timeline li { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+</style>

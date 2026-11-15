@@ -1,0 +1,102 @@
+@import '@fontsource-variable/archivo/wdth.css';
+
+/* Palette taken from topographic-map conventions:
+   water blue for interaction, contour brown for marks of interest,
+   vegetation green as a quiet land tint. */
+:root {
+  --paper: #fbfcfb;
+  --paper-2: #f1f4f1;
+  --ink: #172a3a;
+  --ink-2: #4a5a68;
+  --water: #1d5c96;
+  --water-tint: #e8f0f7;
+  --contour: #a0632b;
+  --vegetation: #d6e5cc;
+  --rule: #d5dde3;
+
+  --font: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --measure: 66ch;
+  --wrap: 1180px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+
+  /* type scale, ratio ~1.25 */
+  --s-1: 0.833rem;
+  --s0: 1rem;
+  --s1: 1.25rem;
+  --s2: 1.563rem;
+  --s3: 1.953rem;
+  --s4: 2.441rem;
+  --s5: 3.815rem;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  font-family: var(--font);
+  font-size: 106.25%; /* 17px */
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  line-height: 1.55;
+  font-variation-settings: 'wdth' 100;
+}
+
+img, svg { display: block; max-width: 100%; }
+
+h1, h2, h3 {
+  font-weight: 640;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'wdth' 112;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 { font-size: var(--s4); }
+h2 { font-size: var(--s3); }
+h3 { font-size: var(--s1); }
+
+p { margin: 0 0 1em; max-width: var(--measure); text-wrap: pretty; }
+
+a { color: var(--water); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible { outline: 2px solid var(--water); outline-offset: 3px; border-radius: 2px; }
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+
+.num { font-variant-numeric: tabular-nums lining-nums; }
+
+.muted { color: var(--ink-2); }
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.7em 1.15em;
+  border-radius: 4px;
+  font-weight: 560;
+  text-decoration: none;
+  border: 1.5px solid var(--water);
+  color: var(--water);
+  background: transparent;
+  font-variation-settings: 'wdth' 106;
+}
+.button.primary { background: var(--water); color: #fff; }
+.button:hover { background: var(--water-tint); }
+.button.primary:hover { background: #164b7c; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

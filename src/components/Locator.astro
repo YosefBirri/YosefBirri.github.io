@@ -1,0 +1,34 @@
+---
+// Per-project locator: a small globe centred on the study area,
+// or the contiguous US for national-scale work.
+import { globeInset, usInset } from '../lib/geo';
+
+interface Props {
+  locator: 'world' | 'us' | 'none';
+  coords?: [number, number];
+  place: string;
+  size?: number;
+}
+const { locator, coords, place, size = 88 } = Astro.props;
+const globe = locator === 'world' && coords ? globeInset(coords, size) : null;
+const usMap = locator === 'us' ? usInset(size * 1.5, size) : null;
+---
+{globe && (
+  <svg class="locator" viewBox={`0 0 ${size} ${size}`} width={size} height={size} role="img" aria-label={`Locator: ${place}`}>
+    <path d={globe.sphere} fill="var(--water-tint)" />
+    <path d={globe.graticule} fill="none" stroke="#c9d9e8" stroke-width="0.5" />
+    <path d={globe.land} fill="var(--vegetation)" stroke="#9fb796" stroke-width="0.4" />
+    <path d={globe.sphere} fill="none" stroke="var(--ink-2)" stroke-width="0.75" />
+    <circle cx={globe.point[0]} cy={globe.point[1]} r="3.2" fill="var(--contour)" stroke="#fff" stroke-width="1.2" />
+  </svg>
+)}
+{usMap && (
+  <svg class="locator" viewBox={`0 0 ${size * 1.5} ${size}`} width={size * 1.5} height={size} role="img" aria-label={`Locator: ${place}`}>
+    <path d={usMap.nation} fill="var(--vegetation)" stroke="var(--ink-2)" stroke-width="0.75" />
+    <path d={usMap.borders} fill="none" stroke="#9fb796" stroke-width="0.5" />
+  </svg>
+)}
+
+<style>
+  .locator { flex: none; }
+</style>

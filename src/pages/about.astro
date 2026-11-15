@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="About" description="About Yosef Birri: geospatial data scientist, University of Washington Geography: Data Science, Jack Kent Cooke Foundation Scholar.">
+  <section class="wrap about">
+    <img class="portrait" src="/img/yosef-birri.jpg" alt="Portrait of Yosef Birri" width="640" height="800" />
+    <div class="text">
+      <h1>About</h1>
+      <p class="lede">
+        I grew up in Ethiopia and came to geography through a practical question: how do you make good decisions about a
+        place when the data about it is thin, scattered or out of date?
+      </p>
+      <p>
+        That question runs through my work. At GenShifter Technologies I mapped locations in Ethiopia where public
+        geographic data barely exists, working from points collected by field workers. In my coursework I've used
+        nighttime satellite imagery to track urban growth across the Horn of Africa, spatial statistics to find where
+        Seattle is building housing, and network analysis to measure how long it takes to reach a hospital. At Seattle
+        Public Utilities I built a dashboard that brings live tide and weather forecasts onto one map for a neighborhood
+        that floods during King Tides.
+      </p>
+      <p>
+        Alongside GIS I've trained machine learning models in Python, from random forests and gradient boosting to
+        neural networks in PyTorch, and I'm most interested in where the two meet: models that respect the fact that
+        data has a location, and maps that are honest about what a model can and can't tell you.
+      </p>
+
+      <h2>Education</h2>
+      <dl class="facts">
+        <div>
+          <dt>University of Washington, Seattle</dt>
+          <dd>B.A. Geography: Data Science, minor in Informatics. Expected December 2026.</dd>
+        </div>
+        <div>
+          <dt>South Seattle College</dt>
+          <dd>Associate of Arts, Computer Science.</dd>
+        </div>
+      </dl>
+
+      <h2>Recognition</h2>
+      <dl class="facts">
+        <div>
+          <dt>Jack Kent Cooke Foundation Scholar</dt>
+          <dd>National undergraduate transfer scholarship.</dd>
+        </div>
+        <div>
+          <dt>Founder, student coding club</dt>
+          <dd>Organized programming activities and mentored students new to computer science.</dd>
+        </div>
+      </dl>
+
+      <p class="actions">
+        <a class="button primary" href="/resume.pdf">Download resume</a>
+        <a class="button" href="mailto:yosephkebede34@gmail.com">Email me</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    padding-block: 3rem;
+    align-items: start;
+  }
+  .portrait { width: 100%; aspect-ratio: 4 / 5;
+    height: auto; object-fit: cover; border-radius: 6px; filter: saturate(0.85); position: sticky; top: 1.5rem; }
+  h1 { font-size: var(--s5); font-variation-settings: 'wdth' 125; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
+  h2 { font-size: var(--s2); margin: 2.75rem 0 1rem; }
+  .lede { font-size: var(--s1); }
+  .facts { margin: 0; }
+  .facts div { padding-block: 0.8rem; border-top: 1px solid var(--rule); }
+  .facts dt { font-weight: 620; }
+  .facts dd { margin: 0.2rem 0 0; color: var(--ink-2); }
+  .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 2.5rem; }
+  @media (max-width: 760px) {
+    .about { grid-template-columns: 1fr; }
+    .portrait { position: static; max-width: 300px; }
+  }
+</style>

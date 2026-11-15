@@ -1,0 +1,69 @@
+---
+// One project in a list: where it is (or how well it did), what it is, what it used.
+import type { CollectionEntry } from 'astro:content';
+import Locator from './Locator.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  headingLevel?: 'h3' | 'h2';
+}
+const { project, headingLevel = 'h3' } = Astro.props;
+const d = project.data;
+const href = `/projects/${project.id}/`;
+const published = d.status === 'published';
+const H = headingLevel;
+---
+<article class="entry" data-categories={d.categories.join('|')}>
+  <div class="aside">
+    {d.locator !== 'none' && <Locator locator={d.locator} coords={d.coords} place={d.place} size={76} />}
+    <p class="metric">
+      <span class="value num">{d.metric.value}</span>
+      <span class="label">{d.metric.label}</span>
+    </p>
+  </div>
+  <div class="body">
+    <p class="place">{d.place}</p>
+    <H class="title">
+      {published ? <a href={href}>{d.title}</a> : d.title}
+    </H>
+    <p class="summary">{d.summary}</p>
+    <p class="tools">{d.tools.join(', ')}</p>
+    {published ? (
+      <a class="more" href={href}>Read the case study</a>
+    ) : (
+      <p class="pending">Case study in progress</p>
+    )}
+  </div>
+</article>
+
+<style>
+  .entry {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 1.5rem;
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--rule);
+  }
+  .aside { display: flex; flex-direction: column; gap: 0.9rem; }
+  .metric { margin: 0; display: flex; flex-direction: column; }
+  .value {
+    font-size: var(--s2);
+    font-weight: 660;
+    font-variation-settings: 'wdth' 112;
+    line-height: 1.1;
+    color: var(--contour);
+  }
+  .label { font-size: var(--s-1); color: var(--ink-2); line-height: 1.35; margin-top: 0.2rem; }
+  .place { margin: 0 0 0.3rem; font-size: var(--s-1); color: var(--ink-2); }
+  .title { font-size: var(--s1); margin-bottom: 0.6rem; }
+  .title a { color: var(--ink); text-decoration: none; }
+  .title a:hover { color: var(--water); text-decoration: underline; }
+  .summary { margin-bottom: 0.7rem; }
+  .tools { font-size: var(--s-1); color: var(--ink-2); margin-bottom: 0.6rem; }
+  .more { font-weight: 560; }
+  .pending { font-size: var(--s-1); color: var(--ink-2); font-style: italic; margin: 0; }
+  @media (max-width: 560px) {
+    .entry { grid-template-columns: 1fr; gap: 0.75rem; }
+    .aside { flex-direction: row; align-items: center; gap: 1rem; }
+  }
+</style>
